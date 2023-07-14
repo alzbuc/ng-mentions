@@ -246,7 +246,7 @@ export function applyChangeToValue(
   const oldPlainTextValue = getPlainText(value, markupMention, displayTransform);
   const lengthDelta = oldPlainTextValue.length - plainTextValue.length;
 
-  /** fix issue when first character changing?**/
+  /** fix issue when first character changing **/
 /*  if (!selectionStartBeforeChange) {
     selectionStartBeforeChange = selectionEndBeforeChange + lengthDelta;
   }
