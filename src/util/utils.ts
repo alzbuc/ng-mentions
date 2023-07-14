@@ -245,12 +245,14 @@ export function applyChangeToValue(
     displayTransform: (..._: string[]) => string) {
   const oldPlainTextValue = getPlainText(value, markupMention, displayTransform);
   const lengthDelta = oldPlainTextValue.length - plainTextValue.length;
-  if (!selectionStartBeforeChange) {
+
+  /** fix issue when first character changing?**/
+/*  if (!selectionStartBeforeChange) {
     selectionStartBeforeChange = selectionEndBeforeChange + lengthDelta;
   }
   if (!selectionEndBeforeChange) {
     selectionEndBeforeChange = selectionStartBeforeChange;
-  }
+  }*/
 
   if (selectionStartBeforeChange === selectionEndBeforeChange && selectionEndBeforeChange === selectionEndAfterChange &&
       oldPlainTextValue.length === plainTextValue.length) {
