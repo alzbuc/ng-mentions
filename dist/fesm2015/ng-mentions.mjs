@@ -209,7 +209,7 @@ function replacePlaceholders(item, markupMention) {
 function applyChangeToValue(value, markupMention, plainTextValue, selectionStartBeforeChange = 0, selectionEndBeforeChange = 0, selectionEndAfterChange = 0, displayTransform) {
     const oldPlainTextValue = getPlainText(value, markupMention, displayTransform);
     const lengthDelta = oldPlainTextValue.length - plainTextValue.length;
-    /** fix issue when first character changing?**/
+    /** fix issue when first character changing **/
     /*  if (!selectionStartBeforeChange) {
         selectionStartBeforeChange = selectionEndBeforeChange + lengthDelta;
       }
@@ -1065,7 +1065,6 @@ class NgMentionsComponent {
             const displayContent = lines.map(line => line.content).join('\n');
             if (this.displayContent !== displayContent) {
                 this.lines = lines;
-                console.log(lines);
                 this.displayContent = displayContent;
                 this.triggerChange(value);
             }
