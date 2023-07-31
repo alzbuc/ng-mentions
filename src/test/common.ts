@@ -1,18 +1,25 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {Key} from '../util/key';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { Key } from '../util/key';
 
 function normalizeText(txt: string): string {
   return txt.trim().replace(/\s+/g, ' ');
 }
 
-export function createGenericTestComponent<T>(html: string, type: new (...args: any[]) => T): ComponentFixture<T> {
-  TestBed.overrideComponent(type, {set: {template: html}});
+export function createGenericTestComponent<T>(
+  html: string,
+  type: new (...args: any[]) => T,
+  detectChanges: boolean = true,
+): ComponentFixture<T> {
+  TestBed.overrideComponent(type, { set: { template: html } });
   const fixture = TestBed.createComponent(type);
-  fixture.detectChanges();
+  if (detectChanges) {
+    fixture.detectChanges();
+  }
   return fixture as ComponentFixture<T>;
 }
 
-export type Browser = 'ie9'|'ie10'|'ie11'|'ie'|'edge'|'chrome'|'safari'|'firefox';
+export type Browser = 'ie9' | 'ie10' | 'ie11' | 'ie' | 'edge' | 'chrome' | 'safari' | 'firefox';
 
 export function getBrowser(ua = window.navigator.userAgent) {
   const browser = 'unknown';
@@ -54,8 +61,10 @@ export function getBrowser(ua = window.navigator.userAgent) {
   }
 }
 
-export function isBrowser(browsers: Browser|Browser[], ua = window.navigator.userAgent) {
-  const browsersStr = Array.isArray(browsers) ? (browsers as Browser[]).map(x => x.toString()) : [browsers.toString()];
+export function isBrowser(browsers: Browser | Browser[], ua = window.navigator.userAgent) {
+  const browsersStr = Array.isArray(browsers)
+    ? (browsers as Browser[]).map((x) => x.toString())
+    : [browsers.toString()];
   const browser = getBrowser(ua);
 
   if (browsersStr.indexOf('ie') > -1 && browser.startsWith('ie')) {
@@ -66,33 +75,29 @@ export function isBrowser(browsers: Browser|Browser[], ua = window.navigator.use
 }
 
 export function createKeyEvent(
-    options: {key?: Key, type: 'keyup'|'keydown'|'input', bubbles?: boolean, cancelable?: boolean} = {
-      key: null,
-      type: 'keyup',
-      bubbles: true,
-      cancelable: true
-    }): Event {
-  const eventInitDict: any = {bubbles: options.bubbles, cancelable: options.cancelable};
+  options: { key?: Key; type: 'keyup' | 'keydown' | 'input'; bubbles?: boolean; cancelable?: boolean } = {
+    key: null,
+    type: 'keyup',
+    bubbles: true,
+    cancelable: true,
+  },
+): Event {
+  const eventInitDict: any = { bubbles: options.bubbles, cancelable: options.cancelable };
   if (options.key === Key.Shift) {
     eventInitDict.shiftKey = true;
     options.key = null;
   }
-  let event;
-  const isIE = isBrowser(['ie10', 'ie11']);
-  if (isIE) {
-    event = document.createEvent('KeyboardEvent');
-    event.initEvent(options.type, options.cancelable, options.bubbles);
-  } else {
-    event = new KeyboardEvent(options.type, eventInitDict);
-  }
+  const event = document.createEvent('KeyboardEvent') as any;
+  let initEvent = (event.initKeyEvent || event.initKeyboardEvent).bind(event);
+  initEvent(options.type, options.cancelable, options.bubbles, window, 0, 0, 0, 0, 0, options.key);
   if (options.key) {
     Object.defineProperties(event, {
-      which: {get: () => options.key},
-      keyCode: {get: () => options.key},
-      shiftKey: {get: () => options.key === Key.Shift},
-      altKey: {get: () => false},
-      ctrlKey: {get: () => false},
-      metaKey: {get: () => false},
+      which: { get: () => options.key },
+      keyCode: { get: () => options.key },
+      shiftKey: { get: () => options.key === Key.Shift },
+      altKey: { get: () => false },
+      ctrlKey: { get: () => false },
+      metaKey: { get: () => false },
     });
   }
 

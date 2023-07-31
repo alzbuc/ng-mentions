@@ -1,10 +1,11 @@
-import {Directive, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {MarkupMention, markupToRegExp} from './util/utils';
+import { Directive, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+
+import { MarkupMention, markupToRegExp } from './util/utils';
 
 /**
  * The Highlighted Pattern Directive
  */
-@Directive({exportAs: 'ngHighlighterPattern', selector: 'ng-highlighter-pattern'})
+@Directive({ exportAs: 'ngHighlighterPattern', selector: 'ng-highlighter-pattern' })
 export class NgHighlighterPatternDirective implements OnInit, OnChanges {
   /**
    * Optional. CSS Class that will be added to the highlighted element.
@@ -21,7 +22,7 @@ export class NgHighlighterPatternDirective implements OnInit, OnChanges {
    * and returned to be displayed. No other transformation will be done to the text and no
    * matching information is passed the to function, just the matched text.
    */
-  @Input() markupReplace: string|((content: string) => string);
+  @Input() markupReplace: string | ((content: string) => string);
 
   private markupMention: MarkupMention;
 
@@ -44,8 +45,11 @@ export class NgHighlighterPatternDirective implements OnInit, OnChanges {
   readonly format = (content: string) => {
     if (typeof this.markupReplace === 'string') {
       let result;
-      const replaceTries =
-          [this.markupReplace, `\$${this.markupReplace}`, `\$${this.markupMention.groups[this.markupReplace]}`];
+      const replaceTries = [
+        this.markupReplace,
+        `\$${this.markupReplace}`,
+        `\$${this.markupMention.groups[this.markupReplace]}`,
+      ];
       for (const attempt of replaceTries) {
         result = content.replace(this.markupMention.regEx, attempt);
         if (result !== attempt) {
@@ -59,5 +63,5 @@ export class NgHighlighterPatternDirective implements OnInit, OnChanges {
     }
 
     return content;
-  }
+  };
 }

@@ -1,5 +1,4 @@
-/* eslint-disable */
-import {parseOutApiDocs as apiDoc} from './api-doc';
+import { parseOutApiDocs as apiDoc } from './api-doc';
 
 describe('APIDocVisitor', () => {
   it('should return [] if there are no docs to extract', () => {
@@ -170,22 +169,22 @@ describe('APIDocVisitor', () => {
     expect(interfaceDocs.properties.length).toBe(3);
 
     expect(interfaceDocs.properties[0].name).toBe('backdrop');
-    expect(interfaceDocs.properties[0].description)
-        .toContain('Weather a backdrop element should be created for a given modal (true by default)');
-    expect(interfaceDocs.properties[0].description)
-        .toContain(`Alternatively, specify &#39;static&#39; for a backdrop which doesn&#39;t close the modal on click.`);
-    expect(interfaceDocs.properties[0].type).toBe("boolean | 'static'");
+    expect(interfaceDocs.properties[0].description).toContain(
+      'Weather a backdrop element should be created for a given modal (true by default).',
+    );
+    expect(interfaceDocs.properties[0].type).toBe(`boolean | 'static'`);
     expect(interfaceDocs.properties[0].defaultValue).toBeUndefined();
 
     expect(interfaceDocs.properties[1].name).toBe('keyboard');
-    expect(interfaceDocs.properties[1].description)
-        .toBe('<p>Weather to close the modal when escape key is pressed (true by default).</p>');
+    expect(interfaceDocs.properties[1].description).toBe(
+      '<p>Weather to close the modal when escape key is pressed (true by default).</p>',
+    );
     expect(interfaceDocs.properties[1].type).toBe('boolean');
     expect(interfaceDocs.properties[1].defaultValue).toBeUndefined();
 
     expect(interfaceDocs.properties[2].name).toBe('size');
     expect(interfaceDocs.properties[2].description).toBe('<p>Size of a new modal window.</p>');
-    expect(interfaceDocs.properties[2].type).toBe("'sm' | 'lg'");
+    expect(interfaceDocs.properties[2].type).toBe(`'sm' | 'lg' | 'xl' | string`);
     expect(interfaceDocs.properties[2].defaultValue).toBeUndefined();
   });
 
@@ -210,48 +209,48 @@ describe('APIDocVisitor', () => {
     expect(classDocs.properties.length).toBe(2);
 
     expect(classDocs.properties[0].name).toBe('bar');
-    expect(classDocs.properties[0].description).toContain('the bar');
+    expect(classDocs.properties[0].description).toBe('<p>the bar</p>');
     expect(classDocs.properties[0].type).toBe('string');
 
     expect(classDocs.properties[1].name).toBe('componentInstance');
-    expect(classDocs.properties[1].description).toContain('A getter');
+    expect(classDocs.properties[1].description).toBe('<p>A getter</p>');
     expect(classDocs.properties[1].type).toBe('any');
 
     expect(classDocs.methods.length).toBe(1);
 
     expect(classDocs.methods[0].name).toBe('someMethod');
-    expect(classDocs.methods[0].description).toContain('some method');
+    expect(classDocs.methods[0].description).toBe('<p>some method</p>');
     expect(classDocs.methods[0].returnType).toBe('void');
   });
 
   it('should extract deprecation information', () => {
     const docs = apiDoc(['misc/api-doc-test-cases/release-deprecation.ts']);
 
-    expect(docs.NthDirective.deprecated).toEqual({version: '2.0.0', description: 'description'});
-    expect(docs.NthComponent.deprecated).toEqual({version: '2.0.0', description: 'description'});
-    expect(docs.NthService.deprecated).toEqual({version: '2.0.0', description: 'description'});
-    expect(docs.NthClass.deprecated).toEqual({version: '2.0.0', description: 'description'});
-    expect(docs.NthInterface.deprecated).toEqual({version: '2.0.0', description: 'description'});
+    expect(docs.NthDirective.deprecated).toEqual({ version: '2.0.0', description: 'description' });
+    expect(docs.NthComponent.deprecated).toEqual({ version: '2.0.0', description: 'description' });
+    expect(docs.NthService.deprecated).toEqual({ version: '2.0.0', description: 'description' });
+    expect(docs.NthClass.deprecated).toEqual({ version: '2.0.0', description: 'description' });
+    expect(docs.NthInterface.deprecated).toEqual({ version: '2.0.0', description: 'description' });
 
-    expect(docs.NthDirective.inputs[0].deprecated).toEqual({version: '2.0.0', description: 'description'});
-    expect(docs.NthDirective.outputs[0].deprecated).toEqual({version: '2.0.0', description: 'description'});
-    expect(docs.NthDirective.properties[0].deprecated).toEqual({version: '2.0.0', description: 'description'});
-    expect(docs.NthDirective.methods[0].deprecated).toEqual({version: '2.0.0', description: 'description'});
+    expect(docs.NthDirective.inputs[0].deprecated).toEqual({ version: '2.0.0', description: 'description' });
+    expect(docs.NthDirective.outputs[0].deprecated).toEqual({ version: '2.0.0', description: 'description' });
+    expect(docs.NthDirective.properties[0].deprecated).toEqual({ version: '2.0.0', description: 'description' });
+    expect(docs.NthDirective.methods[0].deprecated).toEqual({ version: '2.0.0', description: 'description' });
   });
 
   it('should extract feature introduction information', () => {
     const docs = apiDoc(['misc/api-doc-test-cases/release-features.ts']);
 
-    expect(docs.NthDirective.since).toEqual({version: '2.0.0', description: ''});
-    expect(docs.NthComponent.since).toEqual({version: '2.0.0', description: ''});
-    expect(docs.NthService.since).toEqual({version: '2.0.0', description: ''});
-    expect(docs.NthClass.since).toEqual({version: '2.0.0', description: ''});
-    expect(docs.NthInterface.since).toEqual({version: '2.0.0', description: ''});
+    expect(docs.NthDirective.since).toEqual({ version: '2.0.0', description: '' });
+    expect(docs.NthComponent.since).toEqual({ version: '2.0.0', description: '' });
+    expect(docs.NthService.since).toEqual({ version: '2.0.0', description: '' });
+    expect(docs.NthClass.since).toEqual({ version: '2.0.0', description: '' });
+    expect(docs.NthInterface.since).toEqual({ version: '2.0.0', description: '' });
 
-    expect(docs.NthDirective.inputs[0].since).toEqual({version: '2.0.0', description: ''});
-    expect(docs.NthDirective.outputs[0].since).toEqual({version: '2.0.0', description: ''});
-    expect(docs.NthDirective.properties[0].since).toEqual({version: '2.0.0', description: ''});
-    expect(docs.NthDirective.methods[0].since).toEqual({version: '2.0.0', description: ''});
+    expect(docs.NthDirective.inputs[0].since).toEqual({ version: '2.0.0', description: '' });
+    expect(docs.NthDirective.outputs[0].since).toEqual({ version: '2.0.0', description: '' });
+    expect(docs.NthDirective.properties[0].since).toEqual({ version: '2.0.0', description: '' });
+    expect(docs.NthDirective.methods[0].since).toEqual({ version: '2.0.0', description: '' });
   });
 
   it('should extract class and interface type parameters', () => {

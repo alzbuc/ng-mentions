@@ -1,11 +1,10 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
     "rootDir": "./",
     "baseUrl": "./",
     "outDir": "dist",
-    "sourceMap": true,
     "module": "commonjs",
-    "moduleResolution": "node",
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
@@ -15,19 +14,7 @@
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "es2015",
-    "types": [
-      "node"
-    ],
-    "lib": [
-      "es2018",
-      "dom"
-    ]
+    "types": ["jasmine"]
   },
-  "include": [
-    "./**/*.ts"
-  ],
-  "exclude": [
-    "./**/*.spec.ts"
-  ]
+  "include": ["./**/*.ts"]
 }

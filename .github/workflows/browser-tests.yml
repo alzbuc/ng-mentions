@@ -18,7 +18,7 @@ jobs:
 
     strategy:
       matrix:
-        node: [12, 14, 16]
+        node: [14, 16, 18]
 
     steps:
       - uses: actions/checkout@v2
@@ -48,8 +48,9 @@ jobs:
 
       - name: Run Tests
         run: |
-          npm ci
-          npm run api-doc:test
+          npm ci --legacy-peer-deps
+          npm run lib:test
+          npm run schematics:test
 
       - name: Register CodeCov
         uses: codecov/codecov-action@v1

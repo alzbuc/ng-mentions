@@ -1,8 +1,9 @@
-import {Directive, ElementRef, forwardRef, HostListener, OnDestroy, OnInit} from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {NgMentionsComponent} from './mentions.component';
+import { Directive, ElementRef, forwardRef, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+import { NgMentionsComponent } from './mentions.component';
 
 /**
  * The NgMentionsAccessorDirective directive is used to indicate the input element.
@@ -10,7 +11,7 @@ import {NgMentionsComponent} from './mentions.component';
 @Directive({
   exportAs: 'ngMentions',
   selector: 'ng-mentions',
-  providers: [{provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgMentionsAccessorDirective), multi: true}]
+  providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgMentionsAccessorDirective), multi: true }],
 })
 export class NgMentionsAccessorDirective implements OnInit, OnDestroy, ControlValueAccessor {
   private _onChange: (_: string) => void;
@@ -20,7 +21,7 @@ export class NgMentionsAccessorDirective implements OnInit, OnDestroy, ControlVa
   constructor(private element: ElementRef, private host: NgMentionsComponent) {}
 
   ngOnInit(): void {
-    this.host.valueChanges.pipe(takeUntil(this._destroyed)).subscribe(value => this.onChange(value));
+    this.host.valueChanges.pipe(takeUntil(this._destroyed)).subscribe((value) => this.onChange(value));
   }
 
   ngOnDestroy(): void {
