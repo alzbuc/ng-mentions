@@ -21,5 +21,5 @@ export declare class NgMentionsAccessorDirective implements OnInit, OnDestroy, C
     onChange(value: string): void;
     onTouched(): void;
     static ɵfac: i0.ɵɵFactoryDeclaration<NgMentionsAccessorDirective, never>;
-    static ɵdir: i0.ɵɵDirectiveDeclaration<NgMentionsAccessorDirective, "ng-mentions", ["ngMentions"], {}, {}, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<NgMentionsAccessorDirective, "ng-mentions", ["ngMentions"], {}, {}, never, never, false, never>;
 }

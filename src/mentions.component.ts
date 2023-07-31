@@ -76,6 +76,7 @@ enum InputToKeyboard {
       (blur)="onBlur($event)"
       (select)="onSelect($event)"
       (mouseup)="onSelect($event)"
+      (keyup)="saveLastChar($event)"
       (ngModelChange)="onChange($event)"
       (scroll)="onTextAreaScroll()"
       [disabled]="disabled"
@@ -151,6 +152,7 @@ export class NgMentionsComponent implements OnChanges, OnInit, AfterViewInit, Af
   private _errorState = false;
   private _inputListener: any;
   private mobile: boolean = isMobileOrTablet();
+  private lastChar: KeyboardEvent;
 
   /**
    * Classes for textarea
@@ -297,6 +299,11 @@ export class NgMentionsComponent implements OnChanges, OnInit, AfterViewInit, Af
   public onTextAreaScroll(): void {
     this.highlighterElement.nativeElement.scrollTop = this.textAreaInputElement.nativeElement.scrollTop;
   }
+  public saveLastChar(event: KeyboardEvent){
+    if (event.key !== 'Shift'){
+      this.lastChar = event;
+    }
+  }
 
   public open(): void {
     const event = { key: this.triggerChar, which: this.triggerChar.charCodeAt(0) };
@@ -327,6 +334,9 @@ export class NgMentionsComponent implements OnChanges, OnInit, AfterViewInit, Af
   public onSelect(event: any): void {
     this.selectionStart = event.target.selectionStart;
     this.selectionEnd = event.target.selectionEnd;
+    if (this.lastChar.key === 'Dead'){
+      this.selectionStart--;
+    }
   }
 
   public onChange(newPlainTextValue: string): void {

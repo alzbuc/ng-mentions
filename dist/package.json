@@ -1,6 +1,6 @@
 {
   "name": "@nth-cloud/ng-mentions",
-  "version": "8.1.0",
+  "version": "10.0.0",
   "description": "Angular components & directives for customizable mentions",
   "keywords": [
     "angular",
@@ -17,23 +17,19 @@
   "license": "MIT",
   "bugs": "https://github.com/nth-cloud/ng-mentions/issues",
   "homepage": "https://github.com/nth-cloud/ng-mentions#readme",
-  "peerDependencies": {
-    "@angular/common": "^13.0.0",
-    "@angular/core": "^13.0.0",
-    "@angular/forms": "^13.0.0"
-  },
+  "schematics": "./schematics/collection.json",
   "module": "fesm2015/ng-mentions.mjs",
   "es2020": "fesm2020/ng-mentions.mjs",
   "esm2020": "esm2020/ng-mentions.mjs",
   "fesm2020": "fesm2020/ng-mentions.mjs",
   "fesm2015": "fesm2015/ng-mentions.mjs",
-  "typings": "ng-mentions.d.ts",
+  "typings": "index.d.ts",
   "exports": {
     "./package.json": {
       "default": "./package.json"
     },
     ".": {
-      "types": "./ng-mentions.d.ts",
+      "types": "./index.d.ts",
       "esm2020": "./esm2020/ng-mentions.mjs",
       "es2020": "./fesm2020/ng-mentions.mjs",
       "es2015": "./fesm2015/ng-mentions.mjs",

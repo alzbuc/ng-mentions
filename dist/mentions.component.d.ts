@@ -1,4 +1,4 @@
-import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, ComponentFactoryResolver, ElementRef, EventEmitter, NgZone, OnChanges, OnDestroy, OnInit, SimpleChanges, TemplateRef, ViewContainerRef } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, ElementRef, EventEmitter, NgZone, OnChanges, OnDestroy, OnInit, SimpleChanges, TemplateRef, ViewContainerRef } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Line, Mention } from './util/interfaces';
 import { NgMentionsListComponent } from './util/mentions-list.component';
@@ -8,7 +8,6 @@ import * as i0 from "@angular/core";
  */
 export declare class NgMentionsComponent implements OnChanges, OnInit, AfterViewInit, AfterViewChecked, OnDestroy {
     private element;
-    private componentResolver;
     private viewContainer;
     private changeDetector;
     private ngZone;
@@ -102,7 +101,7 @@ export declare class NgMentionsComponent implements OnChanges, OnInit, AfterView
     set mentionItems(value: any[]);
     get readonly(): string;
     get errorState(): boolean;
-    constructor(element: ElementRef, componentResolver: ComponentFactoryResolver, viewContainer: ViewContainerRef, changeDetector: ChangeDetectorRef, ngZone: NgZone);
+    constructor(element: ElementRef, viewContainer: ViewContainerRef, changeDetector: ChangeDetectorRef, ngZone: NgZone);
     ngOnInit(): void;
     ngOnChanges(changes: SimpleChanges): void;
     ngAfterViewInit(): void;
@@ -124,6 +123,7 @@ export declare class NgMentionsComponent implements OnChanges, OnInit, AfterView
     private stopEvent;
     private setupMentionsList;
     private handleKeyDown;
+    private handleKeydownMentionSelection;
     private getDisplayValue;
     private showMentionsList;
     private updateMentionsList;
@@ -134,5 +134,5 @@ export declare class NgMentionsComponent implements OnChanges, OnInit, AfterView
     private refreshStyles;
     private triggerChange;
     static ɵfac: i0.ɵɵFactoryDeclaration<NgMentionsComponent, never>;
-    static ɵcmp: i0.ɵɵComponentDeclaration<NgMentionsComponent, "ng-mentions", ["ngMentions"], { "triggerChar": "triggerChar"; "mentionMarkup": "markup"; "disableSearch": "disableSearch"; "maxItems": "maxItems"; "dropUp": "dropUp"; "displayName": "displayName"; "placeholder": "placeholder"; "formClass": "formClass"; "value": "value"; "required": "required"; "disabled": "disabled"; "rows": "rows"; "columns": "cols"; "mentionItems": "mentions"; }, { "search": "search"; "valueChanges": "valueChanges"; "stateChanges": "stateChanges"; }, ["mentionListTemplate"], never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<NgMentionsComponent, "ng-mentions", ["ngMentions"], { "triggerChar": "triggerChar"; "mentionMarkup": "markup"; "disableSearch": "disableSearch"; "maxItems": "maxItems"; "dropUp": "dropUp"; "displayName": "displayName"; "placeholder": "placeholder"; "formClass": "formClass"; "value": "value"; "required": "required"; "disabled": "disabled"; "rows": "rows"; "columns": "cols"; "mentionItems": "mentions"; }, { "search": "search"; "valueChanges": "valueChanges"; "stateChanges": "stateChanges"; }, ["mentionListTemplate"], never, false, never>;
 }

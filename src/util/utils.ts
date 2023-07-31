@@ -41,7 +41,7 @@ export const styleProperties = Object.freeze([
   'MozTabSize',
 ]);
 const isBrowser = typeof window !== 'undefined';
-const isFirefox = isBrowser && (<any>window).mozInnerScreenX != null;
+const isFirefox = isBrowser && (<any> window).mozInnerScreenX != null;
 
 // eslint-disable-next-line max-len
 const mobileRegEx =
@@ -166,7 +166,7 @@ export function getCaretPosition(element: HTMLInputElement): number {
 }
 
 export function getCaretCoordinates(element: HTMLTextAreaElement, position: number): { top: number; left: number } {
-  let coords = { top: 0, left: 0 };
+  let coords = {top: 0, left: 0};
   if (!isBrowser) {
     return coords;
   }
@@ -212,7 +212,7 @@ export function getCaretCoordinates(element: HTMLTextAreaElement, position: numb
 }
 
 export function getElementStyle(element: HTMLElement, property?: string): any {
-  const style = window.getComputedStyle ? getComputedStyle(element) : (<any>element).currentStyle;
+  const style = window.getComputedStyle ? getComputedStyle(element) : (<any> element).currentStyle;
   if (property && typeof property === 'string' && typeof style[property] !== 'undefined') {
     return style[property];
   } else if (property && typeof property === 'string') {
@@ -263,7 +263,7 @@ export function markupToRegExp(markup: string): MarkupMention {
     }
   } while (match);
 
-  return { markup, regEx: new RegExp('(' + markupPattern + ')', 'ig'), groups: placeholders };
+  return {markup, regEx: new RegExp('(' + markupPattern + ')', 'ig'), groups: placeholders};
 }
 
 export function getPlainText(
@@ -297,12 +297,12 @@ export function applyChangeToValue(
   const lengthDelta = oldPlainTextValue.length - plainTextValue.length;
 
   /** fix issue when first character changing **/
-/*  if (!selectionStartBeforeChange) {
-    selectionStartBeforeChange = selectionEndBeforeChange + lengthDelta;
-  }
-  if (!selectionEndBeforeChange) {
-    selectionEndBeforeChange = selectionStartBeforeChange;
-  }*/
+  /*  if (!selectionStartBeforeChange) {
+      selectionStartBeforeChange = selectionEndBeforeChange + lengthDelta;
+    }
+    if (!selectionEndBeforeChange) {
+      selectionEndBeforeChange = selectionStartBeforeChange;
+    }*/
 
   if (
     selectionStartBeforeChange === selectionEndBeforeChange &&
@@ -333,7 +333,7 @@ export function findStartOfMentionInPlainText(
   indexInPlainText: number,
   displayTransform: (..._: string[]) => string,
 ): { start: number; end: number } {
-  let result = { start: -1, end: -1 };
+  let result = {start: -1, end: -1};
   const markupIterator = (
     matchString: string,
     index: number,
@@ -341,7 +341,7 @@ export function findStartOfMentionInPlainText(
     display: string,
   ): boolean => {
     if (mentionPlainTextIndex < indexInPlainText && mentionPlainTextIndex + display.length > indexInPlainText) {
-      result = { start: mentionPlainTextIndex, end: mentionPlainTextIndex + display.length };
+      result = {start: mentionPlainTextIndex, end: mentionPlainTextIndex + display.length};
       return true;
     }
 
@@ -370,7 +370,8 @@ export function isCoordinateWithinRect(rect: DOMRect, x: number, y: number) {
 }
 
 export class Highlighted {
-  constructor(public readonly element: Element, public readonly type: string = null) {}
+  constructor(public readonly element: Element, public readonly type: string = null) {
+  }
 
   get clientRect(): DOMRect {
     return this.element.getBoundingClientRect();

@@ -7,8 +7,8 @@ import * as i5 from "./highlighter.component";
 import * as i6 from "./highlighter-pattern.directive";
 import * as i7 from "@angular/common";
 import * as i8 from "@angular/forms";
-export { NgHighlighterComponent } from './highlighter.component';
 export { NgHighlighterPatternDirective } from './highlighter-pattern.directive';
+export { NgHighlighterComponent } from './highlighter.component';
 export { NgMentionsAccessorDirective } from './mentions-input.directive';
 export { NgMentionsComponent } from './mentions.component';
 export declare class NgMentionsModule {
