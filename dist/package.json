@@ -18,11 +18,7 @@
   "bugs": "https://github.com/nth-cloud/ng-mentions/issues",
   "homepage": "https://github.com/nth-cloud/ng-mentions#readme",
   "schematics": "./schematics/collection.json",
-  "module": "fesm2015/ng-mentions.mjs",
-  "es2020": "fesm2020/ng-mentions.mjs",
-  "esm2020": "esm2020/ng-mentions.mjs",
-  "fesm2020": "fesm2020/ng-mentions.mjs",
-  "fesm2015": "fesm2015/ng-mentions.mjs",
+  "module": "fesm2022/ng-mentions.mjs",
   "typings": "index.d.ts",
   "exports": {
     "./package.json": {
@@ -30,11 +26,9 @@
     },
     ".": {
       "types": "./index.d.ts",
-      "esm2020": "./esm2020/ng-mentions.mjs",
-      "es2020": "./fesm2020/ng-mentions.mjs",
-      "es2015": "./fesm2015/ng-mentions.mjs",
-      "node": "./fesm2015/ng-mentions.mjs",
-      "default": "./fesm2020/ng-mentions.mjs"
+      "esm2022": "./esm2022/ng-mentions.mjs",
+      "esm": "./esm2022/ng-mentions.mjs",
+      "default": "./fesm2022/ng-mentions.mjs"
     }
   },
   "sideEffects": false,
