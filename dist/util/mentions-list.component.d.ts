@@ -29,5 +29,5 @@ export declare class NgMentionsListComponent implements OnInit {
     private get adjustTop();
     private scrollToActiveItem;
     static ɵfac: i0.ɵɵFactoryDeclaration<NgMentionsListComponent, never>;
-    static ɵcmp: i0.ɵɵComponentDeclaration<NgMentionsListComponent, "mentions-list", never, {}, {}, never, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<NgMentionsListComponent, "mentions-list", never, {}, {}, never, never, false, never>;
 }

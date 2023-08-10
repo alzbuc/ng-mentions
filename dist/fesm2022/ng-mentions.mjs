@@ -249,9 +249,6 @@ function applyChangeToValue(value, markupMention, plainTextValue, selectionStart
     if (selectionStartBeforeChange === selectionEndAfterChange) {
         spliceEnd = Math.max(selectionEndBeforeChange, selectionStartBeforeChange + lengthDelta);
     }
-    console.log(insert);
-    console.log(spliceStart);
-    console.log(spliceEnd);
     return spliceString(value, mapPlainTextIndex(value, markupMention, spliceStart, false, displayTransform), mapPlainTextIndex(value, markupMention, spliceEnd, true, displayTransform), insert);
 }
 function findStartOfMentionInPlainText(value, mentionMarkup, indexInPlainText, displayTransform) {
@@ -276,6 +273,8 @@ function isCoordinateWithinRect(rect, x, y) {
     return rect.left < x && x < rect.right && rect.top < y && y < rect.bottom;
 }
 class Highlighted {
+    element;
+    type;
     constructor(element, type = null) {
         this.element = element;
         this.type = type;
@@ -289,29 +288,23 @@ class Highlighted {
  * The Highlighted Pattern Directive
  */
 class NgHighlighterPatternDirective {
-    constructor() {
-        this.format = (content) => {
-            if (typeof this.markupReplace === 'string') {
-                let result;
-                const replaceTries = [
-                    this.markupReplace,
-                    `\$${this.markupReplace}`,
-                    `\$${this.markupMention.groups[this.markupReplace]}`,
-                ];
-                for (const attempt of replaceTries) {
-                    result = content.replace(this.markupMention.regEx, attempt);
-                    if (result !== attempt) {
-                        break;
-                    }
-                }
-                return result;
-            }
-            else if (typeof this.markupReplace === 'function') {
-                return this.markupReplace(content);
-            }
-            return content;
-        };
-    }
+    /**
+     * Optional. CSS Class that will be added to the highlighted element.
+     */
+    className;
+    /**
+     * The markup used to format a mention
+     */
+    markup;
+    /**
+     * This can either be the name of the item taken from part of the markup, or it
+     * can be a fully formed HTML markup with RegExp placers.
+     * Optionally, this can also be a custom function that can be used to format the matched text
+     * and returned to be displayed. No other transformation will be done to the text and no
+     * matching information is passed the to function, just the matched text.
+     */
+    markupReplace;
+    markupMention;
     ngOnInit() {
         if (this.markup) {
             this.markupMention = markupToRegExp(this.markup);
@@ -325,10 +318,31 @@ class NgHighlighterPatternDirective {
     match(value) {
         return this.markupMention ? this.markupMention.regEx.exec(value) : null;
     }
+    format = (content) => {
+        if (typeof this.markupReplace === 'string') {
+            let result;
+            const replaceTries = [
+                this.markupReplace,
+                `\$${this.markupReplace}`,
+                `\$${this.markupMention.groups[this.markupReplace]}`,
+            ];
+            for (const attempt of replaceTries) {
+                result = content.replace(this.markupMention.regEx, attempt);
+                if (result !== attempt) {
+                    break;
+                }
+            }
+            return result;
+        }
+        else if (typeof this.markupReplace === 'function') {
+            return this.markupReplace(content);
+        }
+        return content;
+    };
+    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.0", ngImport: i0, type: NgHighlighterPatternDirective, deps: [], target: i0.ɵɵFactoryTarget.Directive });
+    static ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "16.2.0", type: NgHighlighterPatternDirective, selector: "ng-highlighter-pattern", inputs: { className: "className", markup: "markup", markupReplace: "markupReplace" }, exportAs: ["ngHighlighterPattern"], usesOnChanges: true, ngImport: i0 });
 }
-NgHighlighterPatternDirective.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "15.1.4", ngImport: i0, type: NgHighlighterPatternDirective, deps: [], target: i0.ɵɵFactoryTarget.Directive });
-NgHighlighterPatternDirective.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "15.1.4", type: NgHighlighterPatternDirective, selector: "ng-highlighter-pattern", inputs: { className: "className", markup: "markup", markupReplace: "markupReplace" }, exportAs: ["ngHighlighterPattern"], usesOnChanges: true, ngImport: i0 });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.1.4", ngImport: i0, type: NgHighlighterPatternDirective, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.0", ngImport: i0, type: NgHighlighterPatternDirective, decorators: [{
             type: Directive,
             args: [{ exportAs: 'ngHighlighterPattern', selector: 'ng-highlighter-pattern' }]
         }], propDecorators: { className: [{
@@ -343,18 +357,22 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.1.4", ngImpor
  * The Highlighted Value
  */
 class NgHighlightedValue {
+    /**
+     * Content of the highlighted item that was clicked
+     */
+    content;
+    /**
+     * The type (or class name) associated with the highlighted item that was clicked.
+     *
+     * @see NgHighlighterPatternDirective.className
+     */
+    type = null;
+    /**
+     * Optional. Arbitrary rel associated with the clicked highlighted element.
+     * This is determined by how the highlighted item's content is formatted.
+     */
+    rel = null;
     constructor(content, type = null, rel = null) {
-        /**
-         * The type (or class name) associated with the highlighted item that was clicked.
-         *
-         * @see NgHighlighterPatternDirective.className
-         */
-        this.type = null;
-        /**
-         * Optional. Arbitrary rel associated with the clicked highlighted element.
-         * This is determined by how the highlighted item's content is formatted.
-         */
-        this.rel = null;
         this.content = content;
         this.type = type;
         this.rel = rel;
@@ -365,16 +383,23 @@ class NgHighlightedValue {
  * The Highlighter Component
  */
 class NgHighlighterComponent {
+    element;
+    cdr;
+    /**
+     * Text value to be highlighted
+     */
+    text;
+    /**
+     * Event emitted when a highlighted item it clicked
+     */
+    itemClick = new EventEmitter();
+    patterns;
+    newLine = /\n/g;
+    lines = [];
+    highlightedElements = [];
     constructor(element, cdr) {
         this.element = element;
         this.cdr = cdr;
-        /**
-         * Event emitted when a highlighted item it clicked
-         */
-        this.itemClick = new EventEmitter();
-        this.newLine = /\n/g;
-        this.lines = [];
-        this.highlightedElements = [];
     }
     ngOnChanges(changes) {
         if ('text' in changes) {
@@ -451,10 +476,10 @@ class NgHighlighterComponent {
             return new Highlighted(element, type);
         });
     }
+    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.0", ngImport: i0, type: NgHighlighterComponent, deps: [{ token: i0.ElementRef }, { token: i0.ChangeDetectorRef }], target: i0.ɵɵFactoryTarget.Component });
+    static ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.0", type: NgHighlighterComponent, selector: "ng-highlighter", inputs: { text: "text" }, outputs: { itemClick: "itemClick" }, host: { listeners: { "click": "onItemClick($event)" } }, queries: [{ propertyName: "patterns", predicate: NgHighlighterPatternDirective }], exportAs: ["ngHighlighter"], usesOnChanges: true, ngImport: i0, template: '<div *ngFor="let line of lines" [innerHTML]="line"></div>', isInline: true, dependencies: [{ kind: "directive", type: i1.NgForOf, selector: "[ngFor][ngForOf]", inputs: ["ngForOf", "ngForTrackBy", "ngForTemplate"] }], encapsulation: i0.ViewEncapsulation.None });
 }
-NgHighlighterComponent.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "15.1.4", ngImport: i0, type: NgHighlighterComponent, deps: [{ token: i0.ElementRef }, { token: i0.ChangeDetectorRef }], target: i0.ɵɵFactoryTarget.Component });
-NgHighlighterComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "15.1.4", type: NgHighlighterComponent, selector: "ng-highlighter", inputs: { text: "text" }, outputs: { itemClick: "itemClick" }, host: { listeners: { "click": "onItemClick($event)" } }, queries: [{ propertyName: "patterns", predicate: NgHighlighterPatternDirective }], exportAs: ["ngHighlighter"], usesOnChanges: true, ngImport: i0, template: '<div *ngFor="let line of lines" [innerHTML]="line"></div>', isInline: true, dependencies: [{ kind: "directive", type: i1.NgForOf, selector: "[ngFor][ngForOf]", inputs: ["ngForOf", "ngForTrackBy", "ngForTemplate"] }], encapsulation: i0.ViewEncapsulation.None });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.1.4", ngImport: i0, type: NgHighlighterComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.0", ngImport: i0, type: NgHighlighterComponent, decorators: [{
             type: Component,
             args: [{
                     exportAs: 'ngHighlighter',
@@ -494,14 +519,18 @@ var Key;
 })(Key || (Key = {}));
 
 class NgMentionsListComponent {
-    constructor() {
-        this.activeIndex = -1;
-        this.itemSelected = new EventEmitter();
-        this.show = false;
-        this.dropUp = false;
-        this._top = 0;
-        this._left = 0;
-    }
+    items;
+    itemTemplate;
+    displayTransform;
+    textAreaElement;
+    activeIndex = -1;
+    itemSelected = new EventEmitter();
+    defaultItemTemplate;
+    list;
+    show = false;
+    dropUp = false;
+    _top = 0;
+    _left = 0;
     get top() {
         return this._top + this.adjustTop + 'px';
     }
@@ -579,9 +608,8 @@ class NgMentionsListComponent {
             }
         }
     }
-}
-NgMentionsListComponent.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "15.1.4", ngImport: i0, type: NgMentionsListComponent, deps: [], target: i0.ɵɵFactoryTarget.Component });
-NgMentionsListComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "15.1.4", type: NgMentionsListComponent, selector: "mentions-list", host: { properties: { "class.show": "this.show", "class.drop-up": "this.dropUp", "style.top": "this.top", "style.left": "this.left", "class.no-items": "this.noItems" } }, viewQueries: [{ propertyName: "defaultItemTemplate", first: true, predicate: ["defaultItemTemplate"], descendants: true, static: true }, { propertyName: "list", first: true, predicate: ["list"], descendants: true, static: true }], ngImport: i0, template: `
+    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.0", ngImport: i0, type: NgMentionsListComponent, deps: [], target: i0.ɵɵFactoryTarget.Component });
+    static ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.0", type: NgMentionsListComponent, selector: "mentions-list", host: { properties: { "class.show": "this.show", "class.drop-up": "this.dropUp", "style.top": "this.top", "style.left": "this.left", "class.no-items": "this.noItems" } }, viewQueries: [{ propertyName: "defaultItemTemplate", first: true, predicate: ["defaultItemTemplate"], descendants: true, static: true }, { propertyName: "list", first: true, predicate: ["list"], descendants: true, static: true }], ngImport: i0, template: `
     <ng-template #defaultItemTemplate let-item="item">
       {{ transformItem(item) }}
     </ng-template>
@@ -596,7 +624,8 @@ NgMentionsListComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0"
       </li>
     </ul>
   `, isInline: true, styles: ["mentions-list{position:absolute;display:none}mentions-list.drop-up{-webkit-transform:translateY(-100%);transform:translateY(-100%)}mentions-list.show{display:block}mentions-list.no-items{display:none}mentions-list .scrollable-menu{display:block;height:auto;max-height:300px;overflow:auto}mentions-list li.active{background:#f7f7f9}mentions-list .dropdown-menu,mentions-list .dropdown-menu li{list-style:none}\n", "mentions-list.show{display:block}mentions-list.no-items{display:none}\n", "mentions-list .scrollable-menu{display:block;height:auto;max-height:300px;overflow:auto}\n", "mentions-list li.active{background:#f7f7f9}\n"], dependencies: [{ kind: "directive", type: i1.NgForOf, selector: "[ngFor][ngForOf]", inputs: ["ngForOf", "ngForTrackBy", "ngForTemplate"] }, { kind: "directive", type: i1.NgTemplateOutlet, selector: "[ngTemplateOutlet]", inputs: ["ngTemplateOutletContext", "ngTemplateOutlet", "ngTemplateOutletInjector"] }], encapsulation: i0.ViewEncapsulation.None });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.1.4", ngImport: i0, type: NgMentionsListComponent, decorators: [{
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.0", ngImport: i0, type: NgMentionsListComponent, decorators: [{
             type: Component,
             args: [{ selector: 'mentions-list', template: `
     <ng-template #defaultItemTemplate let-item="item">
@@ -637,10 +666,11 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.1.4", ngImpor
             }] } });
 
 class HighlightedDirective {
+    tag;
+    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.0", ngImport: i0, type: HighlightedDirective, deps: [], target: i0.ɵɵFactoryTarget.Directive });
+    static ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "16.2.0", type: HighlightedDirective, selector: "highlighted", inputs: { tag: "tag" }, ngImport: i0 });
 }
-HighlightedDirective.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "15.1.4", ngImport: i0, type: HighlightedDirective, deps: [], target: i0.ɵɵFactoryTarget.Directive });
-HighlightedDirective.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "15.1.4", type: HighlightedDirective, selector: "highlighted", inputs: { tag: "tag" }, ngImport: i0 });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.1.4", ngImport: i0, type: HighlightedDirective, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.0", ngImport: i0, type: HighlightedDirective, decorators: [{
             type: Directive,
             args: [{ selector: 'highlighted' }]
         }], propDecorators: { tag: [{
@@ -657,6 +687,70 @@ var InputToKeyboard;
  * The Mentions Component
  */
 class NgMentionsComponent {
+    element;
+    viewContainer;
+    changeDetector;
+    ngZone;
+    /**
+     * The character to trigger the mentions list when a user is typing in the input field
+     */
+    triggerChar = '@';
+    /**
+     * The markup used to format a mention in the model value
+     */
+    mentionMarkup = '@[__display__](__type__:__id__)';
+    /**
+     * Optional. When using a custom search (i.e. an API call), the internal searching capability should be disabled.
+     */
+    disableSearch = false;
+    /**
+     * Only used when internal search is not disabled. This limits the maximum number of items to display in the search
+     * result list.
+     */
+    maxItems = -1;
+    /**
+     * Used to cause the search result list to display in a "drop up" fashion, instead of a typical dropdown.
+     */
+    dropUp = false;
+    /**
+     * If the supplied mentions are a list of objects, this is the name of the property used to display
+     * the mention in the search result list and when formatting a mention in the displayed text.
+     */
+    displayName = 'display';
+    placeholder;
+    /**
+     * An event emitted, after the trigger character has been typed, with the user-entered search string.
+     */
+    search = new EventEmitter();
+    valueChanges = new EventEmitter();
+    stateChanges = new Subject();
+    mentionListTemplate;
+    textAreaInputElement;
+    highlighterElement;
+    displayContent = '';
+    lines = [];
+    highlighterStyle = {};
+    textAreaClassNames = {};
+    selectionStart;
+    selectionEnd;
+    mentions = [];
+    _value = '';
+    _required;
+    _disabled;
+    _rows = 1;
+    _columns = 20;
+    searchString;
+    startPos;
+    startNode;
+    mentionsList;
+    stopSearch = false;
+    markupSearch;
+    _destroyed = new Subject();
+    newLine = /\n/g;
+    _errorState = false;
+    _inputListener;
+    mobile = isMobileOrTablet();
+    lastChar;
     /**
      * Classes for textarea
      */
@@ -737,51 +831,6 @@ class NgMentionsComponent {
         this.viewContainer = viewContainer;
         this.changeDetector = changeDetector;
         this.ngZone = ngZone;
-        /**
-         * The character to trigger the mentions list when a user is typing in the input field
-         */
-        this.triggerChar = '@';
-        /**
-         * The markup used to format a mention in the model value
-         */
-        this.mentionMarkup = '@[__display__](__type__:__id__)';
-        /**
-         * Optional. When using a custom search (i.e. an API call), the internal searching capability should be disabled.
-         */
-        this.disableSearch = false;
-        /**
-         * Only used when internal search is not disabled. This limits the maximum number of items to display in the search
-         * result list.
-         */
-        this.maxItems = -1;
-        /**
-         * Used to cause the search result list to display in a "drop up" fashion, instead of a typical dropdown.
-         */
-        this.dropUp = false;
-        /**
-         * If the supplied mentions are a list of objects, this is the name of the property used to display
-         * the mention in the search result list and when formatting a mention in the displayed text.
-         */
-        this.displayName = 'display';
-        /**
-         * An event emitted, after the trigger character has been typed, with the user-entered search string.
-         */
-        this.search = new EventEmitter();
-        this.valueChanges = new EventEmitter();
-        this.stateChanges = new Subject();
-        this.displayContent = '';
-        this.lines = [];
-        this.highlighterStyle = {};
-        this.textAreaClassNames = {};
-        this.mentions = [];
-        this._value = '';
-        this._rows = 1;
-        this._columns = 20;
-        this.stopSearch = false;
-        this._destroyed = new Subject();
-        this.newLine = /\n/g;
-        this._errorState = false;
-        this.mobile = isMobileOrTablet();
     }
     ngOnInit() {
         this.parseMarkup();
@@ -814,6 +863,11 @@ class NgMentionsComponent {
     onTextAreaScroll() {
         this.highlighterElement.nativeElement.scrollTop = this.textAreaInputElement.nativeElement.scrollTop;
     }
+    saveLastChar(event) {
+        if (event.key !== 'Shift') {
+            this.lastChar = event;
+        }
+    }
     open() {
         const event = { key: this.triggerChar, which: this.triggerChar.charCodeAt(0) };
         this.textAreaInputElement.nativeElement.focus();
@@ -841,6 +895,9 @@ class NgMentionsComponent {
     onSelect(event) {
         this.selectionStart = event.target.selectionStart;
         this.selectionEnd = event.target.selectionEnd;
+        if (this.lastChar.key === 'Dead') {
+            this.selectionStart--;
+        }
     }
     onChange(newPlainTextValue) {
         const value = this._value;
@@ -1163,9 +1220,8 @@ class NgMentionsComponent {
         this.valueChanges.emit(this._value);
         this.changeDetector.detectChanges();
     }
-}
-NgMentionsComponent.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "15.1.4", ngImport: i0, type: NgMentionsComponent, deps: [{ token: i0.ElementRef }, { token: i0.ViewContainerRef }, { token: i0.ChangeDetectorRef }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Component });
-NgMentionsComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "15.1.4", type: NgMentionsComponent, selector: "ng-mentions", inputs: { triggerChar: "triggerChar", mentionMarkup: ["markup", "mentionMarkup"], disableSearch: "disableSearch", maxItems: "maxItems", dropUp: "dropUp", displayName: "displayName", placeholder: "placeholder", formClass: "formClass", value: "value", required: "required", disabled: "disabled", rows: "rows", columns: ["cols", "columns"], mentionItems: ["mentions", "mentionItems"] }, outputs: { search: "search", valueChanges: "valueChanges", stateChanges: "stateChanges" }, host: { listeners: { "window:resize": "onWindowResize()" } }, queries: [{ propertyName: "mentionListTemplate", first: true, predicate: TemplateRef, descendants: true, static: true }], viewQueries: [{ propertyName: "textAreaInputElement", first: true, predicate: ["input"], descendants: true, static: true }, { propertyName: "highlighterElement", first: true, predicate: ["highlighter"], descendants: true, static: true }], exportAs: ["ngMentions"], usesOnChanges: true, ngImport: i0, template: `
+    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.0", ngImport: i0, type: NgMentionsComponent, deps: [{ token: i0.ElementRef }, { token: i0.ViewContainerRef }, { token: i0.ChangeDetectorRef }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Component });
+    static ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.0", type: NgMentionsComponent, selector: "ng-mentions", inputs: { triggerChar: "triggerChar", mentionMarkup: ["markup", "mentionMarkup"], disableSearch: "disableSearch", maxItems: "maxItems", dropUp: "dropUp", displayName: "displayName", placeholder: "placeholder", formClass: "formClass", value: "value", required: "required", disabled: "disabled", rows: "rows", columns: ["cols", "columns"], mentionItems: ["mentions", "mentionItems"] }, outputs: { search: "search", valueChanges: "valueChanges", stateChanges: "stateChanges" }, host: { listeners: { "window:resize": "onWindowResize()" } }, queries: [{ propertyName: "mentionListTemplate", first: true, predicate: TemplateRef, descendants: true, static: true }], viewQueries: [{ propertyName: "textAreaInputElement", first: true, predicate: ["input"], descendants: true, static: true }, { propertyName: "highlighterElement", first: true, predicate: ["highlighter"], descendants: true, static: true }], exportAs: ["ngMentions"], usesOnChanges: true, ngImport: i0, template: `
     <div
       #highlighter
       class="highlighter"
@@ -1190,6 +1246,7 @@ NgMentionsComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", ve
       (blur)="onBlur($event)"
       (select)="onSelect($event)"
       (mouseup)="onSelect($event)"
+      (keyup)="saveLastChar($event)"
       (ngModelChange)="onChange($event)"
       (scroll)="onTextAreaScroll()"
       [disabled]="disabled"
@@ -1197,7 +1254,8 @@ NgMentionsComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", ve
       [placeholder]="placeholder"
     ></textarea>
   `, isInline: true, styles: ["ng-mentions{position:relative;display:inline-block}ng-mentions textarea{position:relative;background-color:transparent!important}ng-mentions .highlighter{position:absolute;top:0;left:0;right:0;bottom:0;color:transparent;overflow:hidden!important}ng-mentions highlighted{display:inline;border-radius:3px;padding:1px;margin:-1px;overflow-wrap:break-word;background-color:#add8e6}\n"], dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i1.NgForOf, selector: "[ngFor][ngForOf]", inputs: ["ngForOf", "ngForTrackBy", "ngForTemplate"] }, { kind: "directive", type: i1.NgIf, selector: "[ngIf]", inputs: ["ngIf", "ngIfThen", "ngIfElse"] }, { kind: "directive", type: i1.NgStyle, selector: "[ngStyle]", inputs: ["ngStyle"] }, { kind: "directive", type: i2.DefaultValueAccessor, selector: "input:not([type=checkbox])[formControlName],textarea[formControlName],input:not([type=checkbox])[formControl],textarea[formControl],input:not([type=checkbox])[ngModel],textarea[ngModel],[ngDefaultControl]" }, { kind: "directive", type: i2.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { kind: "directive", type: i2.RequiredValidator, selector: ":not([type=checkbox])[required][formControlName],:not([type=checkbox])[required][formControl],:not([type=checkbox])[required][ngModel]", inputs: ["required"] }, { kind: "directive", type: i2.NgModel, selector: "[ngModel]:not([formControlName]):not([formControl])", inputs: ["name", "disabled", "ngModel", "ngModelOptions"], outputs: ["ngModelChange"], exportAs: ["ngModel"] }, { kind: "directive", type: HighlightedDirective, selector: "highlighted", inputs: ["tag"] }], encapsulation: i0.ViewEncapsulation.None });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.1.4", ngImport: i0, type: NgMentionsComponent, decorators: [{
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.0", ngImport: i0, type: NgMentionsComponent, decorators: [{
             type: Component,
             args: [{ exportAs: 'ngMentions', selector: 'ng-mentions', template: `
     <div
@@ -1224,6 +1282,7 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.1.4", ngImpor
       (blur)="onBlur($event)"
       (select)="onSelect($event)"
       (mouseup)="onSelect($event)"
+      (keyup)="saveLastChar($event)"
       (ngModelChange)="onChange($event)"
       (scroll)="onTextAreaScroll()"
       [disabled]="disabled"
@@ -1300,10 +1359,14 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.1.4", ngImpor
  * The NgMentionsAccessorDirective directive is used to indicate the input element.
  */
 class NgMentionsAccessorDirective {
+    element;
+    host;
+    _onChange;
+    _onTouch;
+    _destroyed = new Subject();
     constructor(element, host) {
         this.element = element;
         this.host = host;
-        this._destroyed = new Subject();
     }
     ngOnInit() {
         this.host.valueChanges.pipe(takeUntil(this._destroyed)).subscribe((value) => this.onChange(value));
@@ -1336,10 +1399,10 @@ class NgMentionsAccessorDirective {
             this._onTouch();
         }
     }
+    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.0", ngImport: i0, type: NgMentionsAccessorDirective, deps: [{ token: i0.ElementRef }, { token: NgMentionsComponent }], target: i0.ɵɵFactoryTarget.Directive });
+    static ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "16.2.0", type: NgMentionsAccessorDirective, selector: "ng-mentions", host: { listeners: { "change": "onChange($event)", "touch": "onTouched()" } }, providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgMentionsAccessorDirective), multi: true }], exportAs: ["ngMentions"], ngImport: i0 });
 }
-NgMentionsAccessorDirective.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "15.1.4", ngImport: i0, type: NgMentionsAccessorDirective, deps: [{ token: i0.ElementRef }, { token: NgMentionsComponent }], target: i0.ɵɵFactoryTarget.Directive });
-NgMentionsAccessorDirective.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "15.1.4", type: NgMentionsAccessorDirective, selector: "ng-mentions", host: { listeners: { "change": "onChange($event)", "touch": "onTouched()" } }, providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgMentionsAccessorDirective), multi: true }], exportAs: ["ngMentions"], ngImport: i0 });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.1.4", ngImport: i0, type: NgMentionsAccessorDirective, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.0", ngImport: i0, type: NgMentionsAccessorDirective, decorators: [{
             type: Directive,
             args: [{
                     exportAs: 'ngMentions',
@@ -1369,19 +1432,19 @@ const DECLARATIONS = [
     NgHighlighterPatternDirective,
 ];
 class NgMentionsModule {
+    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.0", ngImport: i0, type: NgMentionsModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule });
+    static ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "16.2.0", ngImport: i0, type: NgMentionsModule, declarations: [NgMentionsComponent,
+            NgMentionsAccessorDirective,
+            NgMentionsListComponent,
+            HighlightedDirective,
+            NgHighlighterComponent,
+            NgHighlighterPatternDirective], imports: [CommonModule, FormsModule], exports: [NgMentionsComponent,
+            NgMentionsAccessorDirective,
+            NgHighlighterComponent,
+            NgHighlighterPatternDirective] });
+    static ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "16.2.0", ngImport: i0, type: NgMentionsModule, imports: [CommonModule, FormsModule] });
 }
-NgMentionsModule.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "15.1.4", ngImport: i0, type: NgMentionsModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule });
-NgMentionsModule.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "15.1.4", ngImport: i0, type: NgMentionsModule, declarations: [NgMentionsComponent,
-        NgMentionsAccessorDirective,
-        NgMentionsListComponent,
-        HighlightedDirective,
-        NgHighlighterComponent,
-        NgHighlighterPatternDirective], imports: [CommonModule, FormsModule], exports: [NgMentionsComponent,
-        NgMentionsAccessorDirective,
-        NgHighlighterComponent,
-        NgHighlighterPatternDirective] });
-NgMentionsModule.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "15.1.4", ngImport: i0, type: NgMentionsModule, imports: [CommonModule, FormsModule] });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.1.4", ngImport: i0, type: NgMentionsModule, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.0", ngImport: i0, type: NgMentionsModule, decorators: [{
             type: NgModule,
             args: [{
                     imports: [CommonModule, FormsModule],

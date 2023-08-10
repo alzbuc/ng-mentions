@@ -29,10 +29,10 @@ export declare function getBoundsOfMentionAtPosition(value: string, mentionMarku
     end: number;
 };
 export declare function escapeHtml(text: string): string;
-export declare function isCoordinateWithinRect(rect: ClientRect, x: number, y: number): boolean;
+export declare function isCoordinateWithinRect(rect: DOMRect, x: number, y: number): boolean;
 export declare class Highlighted {
     readonly element: Element;
     readonly type: string;
     constructor(element: Element, type?: string);
-    get clientRect(): ClientRect;
+    get clientRect(): DOMRect;
 }

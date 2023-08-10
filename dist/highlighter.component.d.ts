@@ -29,5 +29,5 @@ export declare class NgHighlighterComponent implements OnChanges, AfterContentIn
     private getMatchedElement;
     private collectHighlightedItems;
     static ɵfac: i0.ɵɵFactoryDeclaration<NgHighlighterComponent, never>;
-    static ɵcmp: i0.ɵɵComponentDeclaration<NgHighlighterComponent, "ng-highlighter", ["ngHighlighter"], { "text": "text"; }, { "itemClick": "itemClick"; }, ["patterns"], never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<NgHighlighterComponent, "ng-highlighter", ["ngHighlighter"], { "text": { "alias": "text"; "required": false; }; }, { "itemClick": "itemClick"; }, ["patterns"], never, false, never>;
 }

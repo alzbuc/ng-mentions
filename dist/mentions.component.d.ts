@@ -74,6 +74,7 @@ export declare class NgMentionsComponent implements OnChanges, OnInit, AfterView
     private _errorState;
     private _inputListener;
     private mobile;
+    private lastChar;
     /**
      * Classes for textarea
      */
@@ -109,6 +110,7 @@ export declare class NgMentionsComponent implements OnChanges, OnInit, AfterView
     ngOnDestroy(): void;
     onWindowResize(): void;
     onTextAreaScroll(): void;
+    saveLastChar(event: KeyboardEvent): void;
     open(): void;
     onSelect(event: any): void;
     onChange(newPlainTextValue: string): void;
@@ -134,5 +136,5 @@ export declare class NgMentionsComponent implements OnChanges, OnInit, AfterView
     private refreshStyles;
     private triggerChange;
     static ɵfac: i0.ɵɵFactoryDeclaration<NgMentionsComponent, never>;
-    static ɵcmp: i0.ɵɵComponentDeclaration<NgMentionsComponent, "ng-mentions", ["ngMentions"], { "triggerChar": "triggerChar"; "mentionMarkup": "markup"; "disableSearch": "disableSearch"; "maxItems": "maxItems"; "dropUp": "dropUp"; "displayName": "displayName"; "placeholder": "placeholder"; "formClass": "formClass"; "value": "value"; "required": "required"; "disabled": "disabled"; "rows": "rows"; "columns": "cols"; "mentionItems": "mentions"; }, { "search": "search"; "valueChanges": "valueChanges"; "stateChanges": "stateChanges"; }, ["mentionListTemplate"], never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<NgMentionsComponent, "ng-mentions", ["ngMentions"], { "triggerChar": { "alias": "triggerChar"; "required": false; }; "mentionMarkup": { "alias": "markup"; "required": false; }; "disableSearch": { "alias": "disableSearch"; "required": false; }; "maxItems": { "alias": "maxItems"; "required": false; }; "dropUp": { "alias": "dropUp"; "required": false; }; "displayName": { "alias": "displayName"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "formClass": { "alias": "formClass"; "required": false; }; "value": { "alias": "value"; "required": false; }; "required": { "alias": "required"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "rows": { "alias": "rows"; "required": false; }; "columns": { "alias": "cols"; "required": false; }; "mentionItems": { "alias": "mentions"; "required": false; }; }, { "search": "search"; "valueChanges": "valueChanges"; "stateChanges": "stateChanges"; }, ["mentionListTemplate"], never, false, never>;
 }

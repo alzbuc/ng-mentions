@@ -26,5 +26,5 @@ export declare class NgHighlighterPatternDirective implements OnInit, OnChanges 
     match(value: string): RegExpExecArray;
     readonly format: (content: string) => any;
     static ɵfac: i0.ɵɵFactoryDeclaration<NgHighlighterPatternDirective, never>;
-    static ɵdir: i0.ɵɵDirectiveDeclaration<NgHighlighterPatternDirective, "ng-highlighter-pattern", ["ngHighlighterPattern"], { "className": "className"; "markup": "markup"; "markupReplace": "markupReplace"; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<NgHighlighterPatternDirective, "ng-highlighter-pattern", ["ngHighlighterPattern"], { "className": { "alias": "className"; "required": false; }; "markup": { "alias": "markup"; "required": false; }; "markupReplace": { "alias": "markupReplace"; "required": false; }; }, {}, never, never, false, never>;
 }
