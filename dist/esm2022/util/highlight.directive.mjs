@@ -2,10 +2,10 @@ import { Directive, Input } from '@angular/core';
 import * as i0 from "@angular/core";
 export class HighlightedDirective {
     tag;
-    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.0", ngImport: i0, type: HighlightedDirective, deps: [], target: i0.ɵɵFactoryTarget.Directive });
-    static ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "16.2.0", type: HighlightedDirective, selector: "highlighted", inputs: { tag: "tag" }, ngImport: i0 });
+    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.1.7", ngImport: i0, type: HighlightedDirective, deps: [], target: i0.ɵɵFactoryTarget.Directive });
+    static ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "16.1.7", type: HighlightedDirective, selector: "highlighted", inputs: { tag: "tag" }, ngImport: i0 });
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.0", ngImport: i0, type: HighlightedDirective, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.7", ngImport: i0, type: HighlightedDirective, decorators: [{
             type: Directive,
             args: [{ selector: 'highlighted' }]
         }], propDecorators: { tag: [{

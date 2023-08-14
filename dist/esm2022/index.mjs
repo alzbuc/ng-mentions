@@ -27,8 +27,8 @@ const DECLARATIONS = [
     NgHighlighterPatternDirective,
 ];
 export class NgMentionsModule {
-    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.0", ngImport: i0, type: NgMentionsModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule });
-    static ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "16.2.0", ngImport: i0, type: NgMentionsModule, declarations: [NgMentionsComponent,
+    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.1.7", ngImport: i0, type: NgMentionsModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule });
+    static ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "16.1.7", ngImport: i0, type: NgMentionsModule, declarations: [NgMentionsComponent,
             NgMentionsAccessorDirective,
             NgMentionsListComponent,
             HighlightedDirective,
@@ -37,9 +37,9 @@ export class NgMentionsModule {
             NgMentionsAccessorDirective,
             NgHighlighterComponent,
             NgHighlighterPatternDirective] });
-    static ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "16.2.0", ngImport: i0, type: NgMentionsModule, imports: [CommonModule, FormsModule] });
+    static ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "16.1.7", ngImport: i0, type: NgMentionsModule, imports: [CommonModule, FormsModule] });
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.0", ngImport: i0, type: NgMentionsModule, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.7", ngImport: i0, type: NgMentionsModule, decorators: [{
             type: NgModule,
             args: [{
                     imports: [CommonModule, FormsModule],
