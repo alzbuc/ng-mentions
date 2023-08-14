@@ -17,12 +17,6 @@
   "license": "MIT",
   "bugs": "https://github.com/nth-cloud/ng-mentions/issues",
   "homepage": "https://github.com/nth-cloud/ng-mentions#readme",
-  "peerDependencies": {
-    "@angular/common": "16.1.7",
-    "@angular/core": "16.1.7",
-    "@angular/forms": "16.1.7",
-    "typescript": "^4.6.4 <4.9"
-  },
   "schematics": "./schematics/collection.json",
   "module": "fesm2022/ng-mentions.mjs",
   "typings": "index.d.ts",

@@ -13,11 +13,13 @@ function createWorkspace(runner: SchematicTestRunner): Promise<UnitTestTree> {
  */
 export async function createTestApp(runner: SchematicTestRunner, appOptions = {}): Promise<UnitTestTree> {
   let tree = await createWorkspace(runner);
+  // @ts-ignore
   tree = await runner
     /* eslint-disable-next-line deprecation/deprecation */
     .runExternalSchematicAsync('@schematics/angular', 'application', { name: 'app', ...appOptions }, tree)
     .toPromise();
 
+  // @ts-ignore
   return (
     runner
       /* eslint-disable-next-line deprecation/deprecation */
