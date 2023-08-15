@@ -334,7 +334,7 @@ export class NgMentionsComponent implements OnChanges, OnInit, AfterViewInit, Af
   public onSelect(event: any): void {
     this.selectionStart = event.target.selectionStart;
     this.selectionEnd = event.target.selectionEnd;
-    if (this.lastChar.key === 'Dead'){
+    if (this.lastChar?.key === 'Dead'){
       this.selectionStart--;
     }
   }
